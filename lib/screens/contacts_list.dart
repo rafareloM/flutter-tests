@@ -1,14 +1,17 @@
 import 'package:bytebank/components/progress.dart';
-import 'package:bytebank/database/dao/contact_dao.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/contact_form.dart';
 import 'package:bytebank/screens/transaction_form.dart';
-import 'package:bytebank/widgets/app_dependencies.dart';
+import 'package:bytebank/widgets/app_depedencies.dart';
 import 'package:flutter/material.dart';
 
 class ContactsList extends StatefulWidget {
   @override
   _ContactsListState createState() => _ContactsListState();
+
+  const ContactsList({
+    Key key,
+  }) : super(key: key);
 }
 
 class _ContactsListState extends State<ContactsList> {
@@ -20,7 +23,7 @@ class _ContactsListState extends State<ContactsList> {
         title: Text('Transfer'),
       ),
       body: FutureBuilder<List<Contact>>(
-        initialData: List(),
+        initialData: [],
         future: dependencies.contactDao.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {

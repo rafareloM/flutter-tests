@@ -1,9 +1,10 @@
 import 'package:bytebank/database/dao/contact_dao.dart';
 import 'package:bytebank/models/contact.dart';
-import 'package:bytebank/widgets/app_dependencies.dart';
+import 'package:bytebank/widgets/app_depedencies.dart';
 import 'package:flutter/material.dart';
 
 class ContactForm extends StatefulWidget {
+  const ContactForm({Key key}) : super(key: key);
 
   @override
   _ContactFormState createState() => _ContactFormState();
@@ -51,7 +52,7 @@ class _ContactFormState extends State<ContactForm> {
               padding: const EdgeInsets.only(top: 16.0),
               child: SizedBox(
                 width: double.maxFinite,
-                child: RaisedButton(
+                child: OutlinedButton(
                   child: Text('Create'),
                   onPressed: () {
                     final String name = _nameController.text;
@@ -69,7 +70,8 @@ class _ContactFormState extends State<ContactForm> {
     );
   }
 
-  void _save(ContactDao contactDao, Contact newContact, BuildContext context) async {
+  void _save(
+      ContactDao contactDao, Contact newContact, BuildContext context) async {
     await contactDao.save(newContact);
     Navigator.pop(context);
   }

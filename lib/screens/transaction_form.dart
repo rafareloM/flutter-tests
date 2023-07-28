@@ -6,7 +6,7 @@ import 'package:bytebank/components/transaction_auth_dialog.dart';
 import 'package:bytebank/http/webclients/transaction_webclient.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/models/transaction.dart';
-import 'package:bytebank/widgets/app_dependencies.dart';
+import 'package:bytebank/widgets/app_depedencies.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -75,7 +75,7 @@ class _TransactionFormState extends State<TransactionForm> {
                 padding: const EdgeInsets.only(top: 16.0),
                 child: SizedBox(
                   width: double.maxFinite,
-                  child: RaisedButton(
+                  child: OutlinedButton(
                     child: Text('Transfer'),
                     onPressed: () {
                       final double value =
@@ -107,13 +107,13 @@ class _TransactionFormState extends State<TransactionForm> {
   }
 
   void _save(
-    TransactionWebClient webClient,
+    TransactionWebClient transactionWebClient,
     Transaction transactionCreated,
     String password,
     BuildContext context,
   ) async {
     Transaction transaction = await _send(
-      webClient,
+      transactionWebClient,
       transactionCreated,
       password,
       context,

@@ -1,9 +1,9 @@
-import 'package:bytebank/database/dao/contact_dao.dart';
 import 'package:bytebank/screens/contacts_list.dart';
 import 'package:bytebank/screens/transactions_list.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {
+  const Dashboard({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,12 +11,10 @@ class Dashboard extends StatelessWidget {
       appBar: AppBar(
         title: Text('Dashboard'),
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) => SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: constraints.maxHeight,
-            ),
+      body: LayoutBuilder(builder: (context, constraints) {
+        return ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,8 +44,8 @@ class Dashboard extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
