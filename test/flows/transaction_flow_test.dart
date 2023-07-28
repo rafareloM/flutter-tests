@@ -67,7 +67,7 @@ void main() {
     expect(transactionAuthDialog, findsOneWidget);
 
     await fillTextFieldByKey(tester,
-        key: transactionAuthDialogTextFieldPassword);
+        key: transactionAuthDialogTextFieldPassword, fillText: '1000');
 
     final cancelButton = find.widgetWithText(OutlinedButton, 'Cancel');
     expect(cancelButton, findsOneWidget);
