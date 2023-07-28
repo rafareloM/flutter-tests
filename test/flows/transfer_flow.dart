@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../matchers/matchers.dart';
 import '../mocks/mocks.dart';
 import 'actions.dart';
 
@@ -18,19 +17,20 @@ void main() {
   testWidgets('Should transfer to a contact', (tester) async {
     final mockContactDao = MockContactDao();
     final mockTransactionWebClient = MockTransactionWebClient();
-    await tester.pumpWidget(BytebankApp(
-      transactionWebClient: mockTransactionWebClient,
-      contactDao: mockContactDao,
-    ));
-
+    await tester.pumpWidget(
+      BytebankApp(
+        contactDao: mockContactDao,
+        transactionWebClient: mockTransactionWebClient,
+      ),
+    );
     final dashboard = find.byType(Dashboard);
     expect(dashboard, findsOneWidget);
 
-    final alex = Contact(0, 'Alex', 1000);
-    when(mockContactDao.findAll()).thenAnswer((invocation) async => [alex]);
+    Contact contact = Contact(0, 'Rafa', 1000);
 
-    await clickOnTheTransferFeatureItem(tester);
-    await tester.pumpAndSettle();
+    when(mockContactDao.findAll())
+        .thenAnswer(((realInvocation) async => [contact]));
+    await clickOnTransferFeatureItem(tester);
 
     final contactsList = find.byType(ContactsList);
     expect(contactsList, findsOneWidget);
@@ -39,58 +39,51 @@ void main() {
 
     final contactItem = find.byWidgetPredicate((widget) {
       if (widget is ContactItem) {
-        return widget.contact.name == 'Alex' &&
+        return widget.contact.name == "Rafa" &&
             widget.contact.accountNumber == 1000;
       }
       return false;
     });
     expect(contactItem, findsOneWidget);
+
     await tester.tap(contactItem);
     await tester.pumpAndSettle();
 
     final transactionForm = find.byType(TransactionForm);
     expect(transactionForm, findsOneWidget);
 
-    final contactName = find.text('Alex');
+    final contactName = find.text('Rafa');
     expect(contactName, findsOneWidget);
+
     final contactAccountNumber = find.text('1000');
     expect(contactAccountNumber, findsOneWidget);
-    
-    final textFieldValue = find.byWidgetPredicate((widget){
-      return textFieldByLabelTextMatcher(widget, 'Value');
-    });
-    expect(textFieldValue, findsOneWidget);
-    await tester.enterText(textFieldValue, '200');
 
-    final transferButton = find.widgetWithText(RaisedButton, 'Transfer');
-    expect(transferButton, findsOneWidget);
-    await tester.tap(transferButton);
+    await fillTextFieldByLabel(tester, label: 'Value', fillText: '200');
+    await clickOnOutlinedButtonByText(tester, 'Transfer');
+
     await tester.pumpAndSettle();
 
     final transactionAuthDialog = find.byType(TransactionAuthDialog);
     expect(transactionAuthDialog, findsOneWidget);
 
-    final textFieldPassword = find.byKey(transactionAuthDialogTextFieldPasswordKey);
-    expect(textFieldPassword, findsOneWidget);
-    await tester.enterText(textFieldPassword, '1000');
+    await fillTextFieldByKey(tester,
+        key: transactionAuthDialogTextFieldPassword);
 
-    final cancelButton = find.widgetWithText(FlatButton, 'Cancel');
+    final cancelButton = find.widgetWithText(OutlinedButton, 'Cancel');
     expect(cancelButton, findsOneWidget);
-    final confirmButton = find.widgetWithText(FlatButton, 'Confirm');
-    expect(confirmButton, findsOneWidget);
 
-    when(mockTransactionWebClient.save(Transaction(null, 200, alex), '1000'))
-    .thenAnswer((_) async => Transaction(null, 200, alex));
+    when(mockTransactionWebClient.save(Transaction(null, 200, contact), '1000'))
+        .thenAnswer((_) async => Transaction(null, 200, contact));
 
-    await tester.tap(confirmButton);
+    await clickOnOutlinedButtonByText(tester, 'Confirm');
+
     await tester.pumpAndSettle();
 
-    final successDialog = find.byType(SuccessDialog);
-    expect(successDialog, findsOneWidget);
+    final succesDialog = find.byType(SuccessDialog);
+    expect(succesDialog, findsOneWidget);
 
-    final okButton = find.widgetWithText(FlatButton, 'Ok');
-    expect(okButton, findsOneWidget);
-    await tester.tap(okButton);
+    await clickOnOutlinedButtonByText(tester, 'Ok');
+
     await tester.pumpAndSettle();
 
     final contactsListBack = find.byType(ContactsList);
